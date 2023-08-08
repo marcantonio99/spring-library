@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -22,11 +23,19 @@ public class BookController {
     private BookRepository bookRepository;
 
     @GetMapping
-    public String list(Model model) {
-        //recupero la lista dei libri dal database
-        List<Book> books = bookRepository.findAll();
+    public String list(@RequestParam(name = "keyword", required = false) String searchString, Model model) {
+        List<Book> books;
+        if (searchString == null || searchString.isBlank()) {
+            //recupero la lista dei libri dal database
+            books = bookRepository.findAll();
+        } else {
+            //se ho il parametro searchString faccio la query con filtro
+            //books = bookRepository.findByTitle(searchString);
+            books = bookRepository.findByTitleContainingIgnoreCaseOrAuthorsContainingIgnoreCase(searchString, searchString);
+        }
         //passo la lista dei libri alla view
         model.addAttribute("bookList", books);
+        model.addAttribute("searchInput", searchString == null ? "" : searchString);
         //restituisco il nome template della view
         return "/books/list";
     }

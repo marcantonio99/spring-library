@@ -7,7 +7,19 @@
 <div class="container">
     <h1>Lista dei Libri</h1>
     <hr>
-    <table class="table">
+    <div>
+        <form th:action="@{/books}" method="GET">
+            <div class="input-group">
+                <input type="search" class="form-control" placeholder="Ricerca per Titolo o per Autore"
+                       name="keyword" th:value="${searchInput}">
+                <button class="btn btn-outline-secondary" type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+    <!--mostro la tabella solo se la lista ha risultati-->
+    <table class="table" th:if="${bookList.size() > 0}">
         <thead>
         <tr>
             <th>Titolo</th>
@@ -25,11 +37,14 @@
             <td th:text="${book.isbn}"></td>
             <td th:text="${book.year}"></td>
             <td>
-                <a th:href="@{|/books/${book.id}|}">Dettagli</a>
+                <a th:href="@{|/books/${book.id}|}"><i class="fa-solid fa-book"></i></a>
             </td>
         </tr>
         </tbody>
     </table>
+    <div class="alert alert-info" th:unless="${bookList.size() > 0}">
+        no result
+    </div>
 </div>
 </body>
 </html>
