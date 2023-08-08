@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -55,5 +52,19 @@ public class BookController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Book with id" + bookId + "not found");
         }
+    }
+
+    //controller che restituisce la pagina con form di creazione del nuovo libro
+    @GetMapping("/create")
+    public String create(Model model) {
+        //aggiungo al model l'attributo book contenente un book vuoto
+        model.addAttribute("book", new Book());
+        return "/books/create";
+    }
+
+    //controller che gestisce la post nel form con i dati del libro
+    @PostMapping("/create")
+    public String store() {
+        return "redirect:/books";
     }
 }
