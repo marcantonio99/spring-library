@@ -1,6 +1,9 @@
 package org.project.springlibrary.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -11,13 +14,18 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @NotBlank(message = "il titolo non può essere nullo ")
     @Column(nullable = false)
     private String title;
+    @NotBlank
+    @Size(min = 13, max = 14)
     @Column(nullable = false, unique = true)
     private String isbn;
     private String publisher;
     private String authors;
+    @Min(0)
     private Integer year;
+    @Lob
     private String synopsis;
     private Integer numberOfCopies;
     private LocalDateTime createdAt;
@@ -86,7 +94,7 @@ public class Book {
         this.numberOfCopies = numberOfCopies;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public LocalDateTime getCreatedAt(LocalDateTime now) {
         return createdAt;
     }
 

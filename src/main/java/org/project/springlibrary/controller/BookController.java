@@ -1,14 +1,18 @@
 package org.project.springlibrary.controller;
 
+import jakarta.validation.Valid;
 import org.project.springlibrary.model.Book;
 import org.project.springlibrary.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,7 +68,26 @@ public class BookController {
 
     //controller che gestisce la post nel form con i dati del libro
     @PostMapping("/create")
-    public String store() {
+    public String store(@Valid @ModelAttribute("book") Book formBook, BindingResult bindingResult) {
+        //verifico che isbn sia univoco
+        if (!isUniqueIsbn(formBook)) {
+            bindingResult.addError(new FieldError("book", "isbn", formBook.getIsbn(),
+                    false, null, null, "isbn è un valore univoco"));
+        }
+        //verifico se in validazione ci sono stati errori
+        if (bindingResult.hasErrors()) {
+            //se ci sono stati
+            return "/books/create";
+        }
+        //setto il timestamp di creazione
+        formBook.setCreatedAt(LocalDateTime.now());
+        //persisto formBook sul database
+        bookRepository.save(formBook);//il metodo save fa sql se l'oggetto non esiste, altrimenti fa upgrade
         return "redirect:/books";
+    }
+
+    private boolean isUniqueIsbn(Book formBook) {
+        Optional<Book> result = bookRepository.findByIsbn(formBook.getIsbn());
+        return result.isEmpty();
     }
 }

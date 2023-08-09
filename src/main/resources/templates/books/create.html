@@ -16,24 +16,57 @@
             class="row"
     >
         <div class="col-6">
-            <label class="form-label" for="book-title">Titolo</label>
-            <input type="text" id="book-title" th:field="*{title}">
+            <label class="form-label" for="book-title">Titolo*</label>
+            <input class="form-control" type="text" id="book-title" th:field="*{title}" th:errorClass="is-invalid">
+            <div th:if="${#fields.hasErrors('title')}" class="invalid-feedback">
+                <ul>
+                    <li th:each="err : ${#fields.errors('title')}" th:text="${err}"></li>
+                </ul>
+            </div>
         </div>
         <div class="col-6">
             <label class="form-label" for="book-authors">Autore/i</label>
-            <input type="text" id="book-authors" th:field="*{authors}">
+            <input class="form-control" type="text" id="book-authors" th:field="*{authors}">
         </div>
         <div class="col-6">
-            <label class="form-label" for="book-isbn">ISBN</label>
-            <input type="text" id="book-isbn" th:field="*{isbn}">
+            <label class="form-label" for="book-isbn">ISBN*</label>
+            <input class="form-control" type="text" id="book-isbn" th:field="*{isbn}" th:errorClass="is-invalid">
+            <div th:if="${#fields.hasErrors('isbn')}" class="invalid-feedback">
+                <ul>
+                    <li th:each="err : ${#fields.errors('isbn')}" th:text="${err}"></li>
+                </ul>
+            </div>
         </div>
         <div class="col-6">
             <label class="form-label" for="book-publisher">Editore/i</label>
-            <input type="text" id="book-publisher" th:field="*{editore}">
+            <input class="form-control" type="text" id="book-publisher" th:field="*{publisher}">
         </div>
         <div class="col-6">
-            <label class="form-label" for="book-title">Titolo</label>
-            <input type="text" id="book-title" th:field="*{title}">
+            <label class="form-label" for="book-year">Anno</label>
+            <input class="form-control" type="number" id="book-year" th:field="*{year}" th:errorClass="is-invalid">
+            <div th:if="${#fields.hasErrors('year')}">
+                <ul>
+                    <li th:each="err : ${#fields.errors('year')}" th:text="${err}"></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-6">
+            <label class="form-label" for="book-copies">Copie</label>
+            <input class="form-control" type="number" id="book-copies" th:field="*{numberOfCopies}"
+                   th:errorClass="is-invalid">
+            <div th:if="${#fields.hasErrors('numberOfCopies')}">
+                <ul>
+                    <li th:each="err : ${#fields.errors('numberOfCopies')}" th:text="${err}"></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12">
+            <label class="form-label" for="book-synopsis">Sinossi</label>
+            <textarea class="form-control" id="book-synopsis" th:field="*{synopsis}" rows="5"></textarea>
+        </div>
+        <div class="col-12">
+            <button class="btn btn-primary" type="submit">Salva</button>
+            <a class="btn btn-primary" th:href="@{/books}">Cancella</a>
         </div>
     </form>
 </div>
